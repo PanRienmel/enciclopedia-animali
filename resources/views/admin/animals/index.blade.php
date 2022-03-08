@@ -3,12 +3,13 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th scope="col">Nome</th>
                         <th scope="col">Specie</th>
+                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -22,13 +23,6 @@
                             </td>
                             <td>
                                 <a class="btn btn-info" href="{{ route('admin.animals.edit', $animal->id) }}">Modify</a>
-                            </td>
-                            <td>
-                                <form action="{{ route('admin.animals.destroy', $animal) }}" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    <input class="btn btn-danger" type="submit" value="Delete">
-                                </form>
                             </td>
                         </tr>
                     @endforeach

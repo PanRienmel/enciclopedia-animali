@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Model\Specie;
 use App\Model\Animal;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -26,7 +27,8 @@ class AnimalController extends Controller
      */
     public function create()
     {
-        //
+        $species = Specie::all();
+        return view('admin.animals.create', ['species' => $species]);
     }
 
     /**
@@ -37,7 +39,21 @@ class AnimalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        $animalValidate = $request->validate(
+            [
+                'name' => 'required',
+                'description' => 'required',
+                'specie_id' => 'exists:App\Model\Specie,id'
+            ]
+        );
+
+        $animal = new Animal();
+        $animal->fill($data);
+        $animal->save();
+
+        return redirect()->route('admin.animals.show', $animal->id);
     }
 
     /**
@@ -48,7 +64,7 @@ class AnimalController extends Controller
      */
     public function show(Animal $animal)
     {
-        //
+        return view('admin.animals.show', ['animal' => $animal]);
     }
 
     /**
@@ -59,7 +75,8 @@ class AnimalController extends Controller
      */
     public function edit(Animal $animal)
     {
-        //
+        $species = Specie::all();
+        return view('admin.animals.edit', ['animal' => $animal, 'species' => $species]);
     }
 
     /**
@@ -71,7 +88,31 @@ class AnimalController extends Controller
      */
     public function update(Request $request, Animal $animal)
     {
-        //
+        $data = $request->all();
+
+        $animalValidate = $request->validate(
+            [
+                'name' => 'required',
+                'description' => 'required',
+                'specie_id' => 'exists:App\Model\Specie,id'
+            ]
+        );
+
+        //check if data changed
+        if ($data['name'] != $animal->name) {
+            $animal->name = $animal['name'];
+        }
+        if ($data['description'] != $animal->description) {
+            $animal->description = $data['description'];
+        }
+        if ($data['specie_id'] != $animal->specie_id) {
+            $animal->specie_id = $data['specie_id'];
+        }
+
+        //update save on DB
+        $animal->update();
+
+        return redirect()->route('admin.animals.show', $animal);
     }
 
     /**
