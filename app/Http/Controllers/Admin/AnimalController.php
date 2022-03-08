@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Model\Animal;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class AnimalController extends Controller
 {
@@ -14,7 +15,8 @@ class AnimalController extends Controller
      */
     public function index()
     {
-        //
+        $animals = Animal::all();
+        return view('admin.animals.index', ['animals' => $animals]);
     }
 
     /**
